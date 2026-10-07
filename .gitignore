@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+vendor/
+bower_components/
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+
+# Build output
+dist/
+build/
+out/
+target/
+bin/
+obj/
+*.class
+*.o
+*.exe
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Caches & temp
+.cache/
+.parcel-cache/
+.pytest_cache/
+.mypy_cache/
+coverage/
+*.tmp
+*.temp
+*.swp
+*~
+
+# Editors & IDEs
+.vscode/
+.idea/
+*.sublime-workspace
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
