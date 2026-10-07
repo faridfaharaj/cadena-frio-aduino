@@ -1,0 +1,26 @@
+
+
+
+
+
+
+
+Started logging.
+12:12:58.435682 Language server launched with arguments:
+12:12:58.435697   arg[0] = /home/mivowa/.local/share/nvim/mason/bin/arduino-language-server
+12:12:58.435710   arg[1] = -cli
+12:12:58.435720   arg[2] = /usr/bin/arduino-cli
+12:12:58.435731   arg[3] = -clangd
+12:12:58.435741   arg[4] = /home/mivowa/.local/share/nvim/mason/bin/clangd
+12:12:58.435752   arg[5] = -fqbn
+12:12:58.435763   arg[6] = esp8266:esp8266:nodemcuv2
+12:12:58.435773   arg[7] = -log
+12:12:58.435905 ArduinoCLI config file found at /home/mivowa/.arduino15/arduino-cli.yaml
+12:12:58.435994 logging to /home/mivowa/homework/IoT/MQTT/MQTT/inols.log
+12:12:58.436090 [97mLS: : Initial board configuration: esp8266:esp8266:nodemcuv2[0m
+12:12:58.436102 [97mLS: : arduino-language-server Version: 0.7.7 Commit: 9945da3 Date: 2025-03-19T10:22:39Z[0m
+12:12:58.436111 [97mLS: : Language server temp directory: /tmp/arduino-language-server1017527705[0m
+12:12:58.436118 [97mLS: : Language server build path: /tmp/arduino-language-server1017527705/build[0m
+12:12:58.436126 [97mLS: : Language server build sketch root: /tmp/arduino-language-server1017527705/build/sketch[0m
+12:12:58.436133 [97mLS: : Language server FULL build path: /tmp/arduino-language-server1017527705/fullbuild[0m
+12:19:01.733857 INTERRUPTED
