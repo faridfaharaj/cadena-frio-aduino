@@ -1,4 +1,4 @@
-# cadena-frio-arduino
+# Cold Chain Monitor Firmware
 Arduino code for cold chain monitoring.
 
 ## Requirements
