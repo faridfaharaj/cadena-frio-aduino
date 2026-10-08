@@ -1,6 +1,3 @@
-// Este código funciona con la siguiente configuración:
-//    Board support API esp8266 (by ESP8266 Community) version 2.5.2
-
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
@@ -9,29 +6,26 @@
 #include <LittleFS.h>
 
 #define SENSOR_A0 A0
-#define LED1                                                                   \
-  D0 // R-Rojo  ... IMPORTANTE: Validar si el LED es de ánodo o de cátodo común
-#define LED2 D1 // G-Verde
-#define LED3 D2 // B-Azul
+#define LED1 D0 // Red
+#define LED2 D1 // Green
+#define LED3 D2 // Blue
 
-const char *mqtt_server = "broker.hivemq.com";
-const char *channelTopicSub = "RiSa/LEDrgb";
-const char *channelTopicPub = "RiSa/SensorA0";
+const char *mqtt_server;
+const char *channelTopicSub;
+const char *channelTopicPub;
+char clientId[24];
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-long tiempoAnterior = 0;
-char msg[50];
 int lecturaSensorA0 = 0;
 
 void setup_wifi(const char *WIFI_SSID, const char *WIFI_PASSWORD) {
   delay(100);
   Serial.println();
   Serial.print("macAddress: ");
-  Serial.println(WiFi.macAddress()); // mac:="Medium Access Control Address"
-  // Iniciar por conectar con la red WiFi
-  Serial.print("Conectando WiFi --> ");
+  Serial.println(WiFi.macAddress());
+  Serial.print("Seting up WiFi --> ");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   short timeOutTimer = 30 * 2;
@@ -53,10 +47,10 @@ void setup_wifi(const char *WIFI_SSID, const char *WIFI_PASSWORD) {
   }
   randomSeed(micros());
   Serial.println();
-  Serial.println("WiFi conectado!");
+  Serial.println("WiFi connnected!");
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
-} // End setup_wifi()
+}
 
 void callback(char *topic, byte *payload, unsigned int length) {
   char *cstring = (char *)payload;
@@ -66,12 +60,9 @@ void callback(char *topic, byte *payload, unsigned int length) {
   switch (cstring[1]) {
   case 'R':
     Serial.println("\tRojo");
-    digitalWrite(LED1,
-                 LOW); // El LED-Rojo se enciende con '0' por ser ánodo común
-    digitalWrite(LED2,
-                 HIGH); // El LED-Verde se apaga con '1' por ser ánodo común
-    digitalWrite(LED3,
-                 HIGH); // El LED-Azul se apaga con '1' por ser ánodo común
+    digitalWrite(LED1, LOW);
+    digitalWrite(LED2, HIGH);
+    digitalWrite(LED3, HIGH);
     break;
   case 'G':
     Serial.println("\tVerde");
@@ -91,40 +82,33 @@ void callback(char *topic, byte *payload, unsigned int length) {
     digitalWrite(LED2, HIGH);
     digitalWrite(LED3, HIGH);
     break;
-  default: // Sin no fué ninguna de las anteriores entonces hacemos nada
+  default:
     break;
   }
-} // End callback(...)
+}
 
 void reconnect() {
-  // Ciclarse hasta lograr reconexión con "broker"
   while (!client.connected()) {
-    Serial.print("Intentando conexión MQTT ...");
-    // Create a random client ID
-    String clientId = "Client-";
-    clientId += String(random(0xffff), HEX);
-    // Intentar reconexión ...
-    //  ... en caso de que el "broker" tenga clientID, username y password
-    //  ... cambiar la siguiente línea por --> if
-    //  (client.connect(clientId,userName,passWord))
-    if (client.connect(clientId.c_str())) {
-      Serial.println("Conectado al 'broker' MQTT!!!");
-      // Ya conectado al "borker" MQTT suscribirse al tópico
+    Serial.print("Trying MQTT connection ...");
+
+    if (client.connect(clientId)) {
+      Serial.println("Connecting to MQTT broker");
       client.subscribe(channelTopicSub);
     } else {
-      Serial.print("Error de conexión, rc=");
+      Serial.print("Connection Error, rc=");
       Serial.print(client.state());
-      Serial.println(" ... reintentando en 6 seg.");
-      // Esperar 6 segundos para el próximo intento de conexión
+      Serial.println(" ... retrying in 6 seconds");
       delay(6000);
     }
   }
-} // end reconnect()
+}
 
+// ARDUINO FRAMEWORK FUNCTIONS ----------
 void setup() {
   Serial.begin(115200);
   delay(200);
 
+  // Pins
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
   pinMode(LED3, OUTPUT);
@@ -132,6 +116,7 @@ void setup() {
   digitalWrite(LED2, HIGH);
   digitalWrite(LED3, HIGH);
 
+  // Json Configuration
   JsonDocument doc = loadConfig();
 
   if (doc.isNull()) {
@@ -149,14 +134,19 @@ void setup() {
 
   uint16_t mqtt_port = doc["mqtt"]["port"] | 1883;
 
+  // Client ID
+  uint8_t mac[6];
+  WiFi.macAddress(mac);
+  snprintf(clientId, sizeof(clientId), "%s-%02X%02X%02X%02X%02X%02X", "Client-",
+           mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+
+  // wifi
   setup_wifi(WIFI_SSID, WIFI_PASSWORD);
   client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
 }
 
 void loop() {
-  int sensogA0;
-
   if (!client.connected()) {
     reconnect();
   }
@@ -166,7 +156,7 @@ void loop() {
   Serial.print("sensorA0=");
   Serial.println(lecturaSensorA0);
 
-  String msg = "";
+  String msg = String(clientId) + ": ";
   msg = msg + lecturaSensorA0;
   char message[58];
   msg.toCharArray(message, 58);
@@ -174,5 +164,5 @@ void loop() {
   Serial.println(message);
   client.publish(channelTopicPub, message);
 
-  delay(1000); // Esperar 1000 milisegundos
-} // End loop
+  delay(1000);
+}
