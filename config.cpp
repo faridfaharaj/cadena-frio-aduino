@@ -5,10 +5,10 @@
 String WIFI_SSID;
 String WIFI_PASSWORD;
 
-const char *mqtt_server;
+String mqtt_server;
 int mqtt_port;
-const char *channelTopicSub;
-const char *channelTopicPub;
+String channelTopicSub;
+String channelTopicPub;
 
 bool loadConfig() {
   if (!LittleFS.begin()) {
@@ -38,10 +38,10 @@ bool loadConfig() {
   WIFI_SSID = doc["wifi"]["ssid"].as<String>();
   WIFI_PASSWORD = doc["wifi"]["password"].as<String>();
 
-  mqtt_server = strdup(doc["mqtt"]["server"].as<const char *>());
+  mqtt_server = doc["mqtt"]["server"].as<String>();
   mqtt_port = doc["mqtt"]["port"].as<int>();
-  channelTopicPub = strdup(doc["mqtt"]["topic_pub"].as<const char *>());
-  channelTopicSub = strdup(doc["mqtt"]["topic_sub"].as<const char *>());
+  channelTopicPub = doc["mqtt"]["topic_pub"].as<String>();
+  channelTopicSub = doc["mqtt"]["topic_sub"].as<String>();
 
   return true;
 }
