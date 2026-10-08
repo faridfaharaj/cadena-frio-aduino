@@ -14,6 +14,10 @@
 #define LED2 D1 // G-Verde
 #define LED3 D2 // B-Azul
 
+const char *mqtt_server = "broker.hivemq.com";
+const char *channelTopicSub = "RiSa/LEDrgb";
+const char *channelTopicPub = "RiSa/SensorA0";
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -21,7 +25,7 @@ long tiempoAnterior = 0;
 char msg[50];
 int lecturaSensorA0 = 0;
 
-void setup_wifi() {
+void setup_wifi(const char *WIFI_SSID, const char *WIFI_PASSWORD) {
   delay(100);
   Serial.println();
   Serial.print("macAddress: ");
@@ -30,9 +34,22 @@ void setup_wifi() {
   Serial.print("Conectando WiFi --> ");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  short timeOutTimer = 30 * 2;
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
+    if (timeOutTimer == 0) {
+      Serial.print("\r      \r");
+      Serial.print("Its taking too long to connect    ");
+    }
+
     Serial.print(".");
+
+    if (timeOutTimer % 4 == 0) {
+      timeOutTimer = timeOutTimer < 0 ? 0 : timeOutTimer;
+      Serial.print("\b\b\b\b    \b\b\b\b");
+    }
+
+    timeOutTimer--;
   }
   randomSeed(micros());
   Serial.println();
@@ -93,7 +110,7 @@ void reconnect() {
     if (client.connect(clientId.c_str())) {
       Serial.println("Conectado al 'broker' MQTT!!!");
       // Ya conectado al "borker" MQTT suscribirse al tópico
-      client.subscribe(channelTopicSub.c_str());
+      client.subscribe(channelTopicSub);
     } else {
       Serial.print("Error de conexión, rc=");
       Serial.print(client.state());
@@ -115,14 +132,25 @@ void setup() {
   digitalWrite(LED2, HIGH);
   digitalWrite(LED3, HIGH);
 
-  if (!loadConfig()) {
+  JsonDocument doc = loadConfig();
+
+  if (doc.isNull()) {
     Serial.println("Config failed, halting");
     while (true)
       delay(1000);
   }
 
-  setup_wifi();
-  client.setServer(mqtt_server.c_str(), mqtt_port);
+  const char *WIFI_SSID = doc["wifi"]["ssid"] | "";
+  const char *WIFI_PASSWORD = doc["wifi"]["password"] | "";
+
+  mqtt_server = strdup(doc["mqtt"]["server"] | "");
+  channelTopicPub = strdup(doc["mqtt"]["topic_pub"] | "");
+  channelTopicSub = strdup(doc["mqtt"]["topic_sub"] | "");
+
+  uint16_t mqtt_port = doc["mqtt"]["port"] | 1883;
+
+  setup_wifi(WIFI_SSID, WIFI_PASSWORD);
+  client.setServer(mqtt_server, mqtt_port);
   client.setCallback(callback);
 }
 
@@ -144,7 +172,7 @@ void loop() {
   msg.toCharArray(message, 58);
   Serial.print("menssage=");
   Serial.println(message);
-  client.publish(channelTopicPub.c_str(), message);
+  client.publish(channelTopicPub, message);
 
   delay(1000); // Esperar 1000 milisegundos
 } // End loop
