@@ -33,7 +33,7 @@ To avoid hardcoding addresses and credentials in the firmware, the configuration
 You can do this by editing `data/config.json`'s placeholder fields with your own desired configuration
 
 > [!WARNING]
-> Anything inside `data/` folder **won't** be added when compiling, unless you create and flash an image of it using **LittleFS**.
+> Anything inside `data/` directory **won't** be added when compiling, unless you create and flash an image of it using **LittleFS**.
 
 ### Creating the image
 
