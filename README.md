@@ -106,7 +106,7 @@ Compile using `Sketch > Verify/Compile` then connect the board to your computer 
 ## Configuration
 Edit `data/config.json` with your own values. 
 
-To flash the configuration install [Arduino LittleFS Upload](https://github.com/earlephilhower/arduino-littlefs-upload) plugin to your IDE and create/flash an image by press `Ctrl + Shift + P` then select `Upload LittleFS to Pico/ESP8266/ESP32`
+To flash the configuration install [Arduino LittleFS Upload](https://github.com/earlephilhower/arduino-littlefs-upload) plugin to your IDE and create/flash an image by pressing `Ctrl + Shift + P` then select `Upload LittleFS to Pico/ESP8266/ESP32`
 
 > [!NOTE]
 > Close the 'Serial Monitor' panel before flashing or it will fail with a 'port-busy' error
