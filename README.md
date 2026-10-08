@@ -18,6 +18,15 @@ arduino-cli upload -p <USB-PORT-HERE> --fqbn esp8266:esp8266:nodemcuv2 .
 
 ```
 
+### getting arduino's USB connected port
+
+``` bash
+# this will output all devices connected 
+# usually something like: '/dev/ttyUSB0'
+arduino-cli board list
+
+```
+
 ## Configuration
 To avoid hardcoding addresses and credentials in the firmware, the configuration is stored separately. This allows devices to have different configurations without recompiling the firmware every time.
 
@@ -30,7 +39,7 @@ You can do this by editing `data/config.json`'s placeholder fields with your own
 
 ``` bash
 ## This will create a fs.bin image file
-<path-to-file-mklittlefs> -c data -p 256 -b 8192 -s 2072576 fs.bin 
+<path-to-mklittlefs> -c data -p 256 -b 8192 -s 2072576 fs.bin 
 
 ```
 **mklittlefs** path can be found by running:
@@ -73,16 +82,6 @@ python "$env:LOCALAPPDATA\Arduino15\packages\esp8266\hardware\esp8266\3.1.2\tool
 
 ``` bash
 arduino-cli monitor -p <USB-PORT-HERE> --config baudrate=115200
-
-```
-
-
-### getting arduino's USB connected port
-
-``` bash
-# this will output all devices connected 
-# usually something like: '/dev/ttyUSB0'
-arduino-cli board list
 
 ```
 
