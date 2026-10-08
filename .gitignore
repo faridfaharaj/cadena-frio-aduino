@@ -54,3 +54,11 @@ coverage/
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# clangd
+.clangd
+compile_commands.json
+
+# Arduino
+fs.bin
+data/

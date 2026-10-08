@@ -1,23 +1,17 @@
-
 // Este código funciona con la siguiente configuración:
 //    Board support API esp8266 (by ESP8266 Community) version 2.5.2
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#define WIFI_SSID "Tec-IoT"
-#define WIFI_PASSWORD "spotless.magnetic.bridge"
-//#define WIFI_SSID "TC1004B"
-//#define WIFI_PASSWORD "Tec-IoT2026"
+#include <LittleFS.h>
+#include <ArduinoJson.h>
+#include "config.h"
 
 #define SENSOR_A0 A0
 #define LED1 D0 //R-Rojo  ... IMPORTANTE: Validar si el LED es de ánodo o de cátodo común
 #define LED2 D1 //G-Verde
 #define LED3 D2 //B-Azul
-
-const char *mqtt_server = "broker.hivemq.com";
-const char *channelTopicSub = "RiSa/LEDrgb";
-const char *channelTopicPub = "RiSa/SensorA0";
  
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -105,15 +99,23 @@ void reconnect() {
 } //end reconnect()
  
 void setup() {
+    Serial.begin(115200);
+    delay(200);
+
     pinMode(LED1, OUTPUT);
     pinMode(LED2, OUTPUT);
     pinMode(LED3, OUTPUT);
     digitalWrite(LED1,HIGH);
     digitalWrite(LED2,HIGH);
     digitalWrite(LED3,HIGH);
-    Serial.begin(115200);
+    
+    if (!loadConfig()) {
+        Serial.println("Config failed, halting");
+        while (true) delay(1000);
+    }
+
     setup_wifi();
-    client.setServer(mqtt_server, 1883);//Usando el puerto 1883, estándar en MQTT
+    client.setServer(mqtt_server, mqtt_port);
     client.setCallback(callback);
 }
 

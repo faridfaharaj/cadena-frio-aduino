@@ -1,0 +1,12 @@
+{
+  "wifi": {
+    "ssid": "<WIFI_SSID>",
+    "password": "<WIFI_PASSWORD>"
+  },
+  "mqtt": {
+    "server": "broker.hivemq.com",
+    "port": 1883,
+    "topic_sub": "RiSa/LEDrgb2007",
+    "topic_pub": "RiSa/SensorA02007"
+  }
+}
