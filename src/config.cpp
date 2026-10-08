@@ -4,7 +4,7 @@
 String WIFI_SSID;
 String WIFI_PASSWORD;
 
-JsonDocument loadConfig() {
+JsonDocument getConfig() {
   JsonDocument doc;
 
   if (!LittleFS.begin()) {
