@@ -13,9 +13,4 @@ public:
   void setBlue();
   void setOff();
 
-private:
-  uint8_t getRedPin();
-  uint8_t getGreenPin();
-  uint8_t getBluePin();
-
 };

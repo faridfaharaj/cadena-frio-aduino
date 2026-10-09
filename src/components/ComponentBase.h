@@ -1,6 +1,7 @@
 #pragma once
+#include <cstdint>
 
 class ComponentBase {
-public:
-    virtual ~ComponentBase() = default;
+protected:
+  virtual uint8_t getPin(int idx) const = 0;
 };
