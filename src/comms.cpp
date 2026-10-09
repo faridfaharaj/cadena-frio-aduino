@@ -1,5 +1,5 @@
 #include "comms.h"
-#include "components/RGBLed.h"
+#include "components/ComponentManager.h"
 
 static WiFiClient espClient;
 static PubSubClient client(espClient);
@@ -86,8 +86,6 @@ void commsPublish(const char *payload) {
   client.publish(channelTopicPub, msg);
 };
 
-RGBLed *led = new RGBLed(D0, D1, D2);
-
 void callback(char *topic, byte *payload, unsigned int length) {
   char *cstring = (char *)payload;
   cstring[length] = '\0'; // Adds a terminate to end of string based on length
@@ -96,19 +94,19 @@ void callback(char *topic, byte *payload, unsigned int length) {
   switch (cstring[1]) {
   case 'R':
     Serial.println("\tRojo");
-    led->setRed();
+    ComponentManager::led.setRed();
     break;
   case 'G':
     Serial.println("\tVerde");
-    led->setGreen();
+    ComponentManager::led.setGreen();
     break;
   case 'B':
     Serial.println("\tAzul");
-    led->setBlue();
+    ComponentManager::led.setBlue();
     break;
   case 'X':
     Serial.println("\tAPAGAR todo!");
-    led->setOff();
+    ComponentManager::led.setOff();
     break;
   default:
     break;
