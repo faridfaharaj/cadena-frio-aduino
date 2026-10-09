@@ -1,15 +1,11 @@
 #include "src/comms.h"
 #include "src/config.h"
-#include "src/pins.h"
 
 int lecturaSensorA0 = 0;
 
 void setup() {
   Serial.begin(115200);
   delay(200);
-
-  // Pins
-  pinsInit();
 
   // Json Configuration
   JsonDocument doc = getConfig();
