@@ -3,3 +3,7 @@
 
 RGBLed ComponentManager::led(D0, D1, D2);
 DHT ComponentManager::dht(D6, DHT11);
+
+void ComponentManager::initializeComponents(){
+  dht.begin();
+};

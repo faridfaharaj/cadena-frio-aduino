@@ -27,7 +27,7 @@ void setup() {
 
   commsInit(WIFI_SSID, WIFI_PASSWORD, server, port, topicSub, topicPub);
 
-  ComponentManager::dht.begin();
+  ComponentManager::initializeComponents();
 }
 
 void loop() {
