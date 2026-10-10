@@ -9,9 +9,7 @@ template <std::size_t N> Component<N>::Component(const Pin (&pins)[N]) {
   }
 }
 
-// Getter
-template <std::size_t N> 
-uint8_t Component<N>::getPin(int idx) const {
+template <std::size_t N> uint8_t Component<N>::getPin(int idx) const {
   return this->pins[idx];
 }
 
