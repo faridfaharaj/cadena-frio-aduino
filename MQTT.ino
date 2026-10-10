@@ -1,7 +1,6 @@
 #include "src/comms.h"
+#include "src/components/ComponentManager.h"
 #include "src/config.h"
-
-int lecturaSensorA0 = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -27,23 +26,23 @@ void setup() {
   uint16_t port = doc["mqtt"]["port"] | 1883;
 
   commsInit(WIFI_SSID, WIFI_PASSWORD, server, port, topicSub, topicPub);
+
+  ComponentManager::dht.begin();
 }
 
 void loop() {
- 
+
   commsUpdate();
 
-  lecturaSensorA0 = analogRead(A0);
-  Serial.print("sensorA0=");
-  Serial.println(lecturaSensorA0);
+  float humidity = ComponentManager::dht.readHumidity();
+  float temperature = ComponentManager::dht.readTemperature();
 
-  String msg = "";
-  msg = msg + lecturaSensorA0;
-  char message[58];
-  msg.toCharArray(message, 58);
-  Serial.print("menssage=");
+  char message[80];
+  snprintf(message, sizeof(message), "Temperature: %.1f C - Humidity: %.1f%%",
+           temperature, humidity);
+
   Serial.println(message);
-  commsPublish(msg.c_str());
+  commsPublish(message);
 
   delay(1000);
 }
