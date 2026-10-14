@@ -1,9 +1,10 @@
 #include "ComponentManager.h"
-#include "pins_arduino.h"
+#include <NewPing.h>
 
 RGBLed ComponentManager::led(D0, D1, D2);
-DHT ComponentManager::dht(D6, DHT11);
+DHT ComponentManager::TempHumSensor(D3, DHT11);
+NewPing ComponentManager::distanceSensor(D5, D6, 400);
 
-void ComponentManager::initializeComponents(){
-  dht.begin();
+void ComponentManager::initializeComponents() { 
+  TempHumSensor.begin(); 
 };

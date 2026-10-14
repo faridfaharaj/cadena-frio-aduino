@@ -34,15 +34,19 @@ void loop() {
 
   commsUpdate();
 
-  float humidity = ComponentManager::dht.readHumidity();
-  float temperature = ComponentManager::dht.readTemperature();
+  String message;
+  /*
+  float humidity = ComponentManager::TempHumSensor.readHumidity();
+  float temperature = ComponentManager::TempHumSensor.readTemperature();
 
-  char message[80];
   snprintf(message, sizeof(message), "Temperature: %.1f C - Humidity: %.1f%%",
-           temperature, humidity);
+  temperature, humidity);
+  */
 
+  unsigned long distance = ComponentManager::distanceSensor.ping_cm();
+  message = "distance: " + String(distance) + "cm";
   Serial.println(message);
-  commsPublish(message);
+  commsPublish(message.c_str());
 
   delay(1000);
 }
