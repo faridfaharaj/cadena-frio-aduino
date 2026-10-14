@@ -36,8 +36,8 @@ void loop() {
 
   String message;
   /*
-  float humidity = ComponentManager::TempHumSensor.readHumidity();
-  float temperature = ComponentManager::TempHumSensor.readTemperature();
+  float humidity = ComponentManager::tempHumSensor.readHumidity();
+  float temperature = ComponentManager::tempHumSensor.readTemperature();
 
   snprintf(message, sizeof(message), "Temperature: %.1f C - Humidity: %.1f%%",
   temperature, humidity);
